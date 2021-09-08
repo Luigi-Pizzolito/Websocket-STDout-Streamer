@@ -1,0 +1,17 @@
+{
+  "name": "websocket-stdout-streamer",
+  "version": "1.0.0",
+  "description": "Streams STDout via websockets to a webpage.",
+  "main": "run.js",
+  "scripts": {
+    "test": "node run.js"
+  },
+  "author": "Luigi Pizzolito",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-global-storage": "^1.2.3",
+    "stream-splitter": "^0.3.2",
+    "ws": "^8.2.1"
+  }
+}

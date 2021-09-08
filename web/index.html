@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websocket STDout Streamer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1 class="card-title">Websocket STDout Streamer</h1>
+    <table class="table" style="width:250px;">
+        <tr>
+            <th scope="row">Volume:</th>
+            <td id="vol" class="text-left">null</td>
+        </tr>
+        <tr>
+            <th scope="row">Label:</th>
+            <td id="lbl" class="text-left">null</td>
+        </tr>
+        <tr>
+            <th scope="row">Microphone:</th>
+            <td id="mic" class="text-left">null</td>
+        </tr>
+        <tr>
+            <th scope="row">Confidence:</th>
+            <td id="cfd" class="text-left">null</td>
+        </tr>
+    </table>
+
+    <script>
+        function display(data) {
+            let indata = JSON.parse(event.data);
+            // console.log(indata)
+            let vals = [document.getElementById("vol"), document.getElementById("lbl"), document.getElementById("mic"), document.getElementById("cfd")];
+            for (let i = 0; i < indata.length; i++) {
+                vals[i].innerHTML = indata[i];
+            }
+        }
+
+        const socket = new WebSocket('ws://localhost:8000/ws');
+
+        socket.onopen = function (e) {
+            alert("[open] Connection established");
+        };
+
+        socket.onmessage = function (event) {
+            // document.write(`${event.data}`);
+            display(event.data);
+        };
+
+        socket.onclose = function (event) {
+            if (event.wasClean) {
+                alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+            } else {
+                // e.g. server process killed or network down
+                // event.code is usually 1006 in this case
+                alert('[close] Connection died');
+            }
+        };
+
+        socket.onerror = function (error) {
+            alert(`[error] ${error.message}`);
+        };
+    </script>
+</body>
+
+</html>
